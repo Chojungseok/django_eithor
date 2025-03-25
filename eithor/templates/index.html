@@ -1,14 +1,92 @@
 {% extends 'base.html' %}
 
+{% block head %}
+    {% load static %}
+    <style>
+        /* 배경 이미지 설정 */
+        body {
+            background: url("https://cdn.pixabay.com/photo/2017/08/30/07/52/sky-2693695_1280.jpg") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        /* 반투명한 오버레이 추가 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 188, 212, 0.4); /* 반투명한 푸른 오버레이 */
+            z-index: -1;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .table {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+        }
+
+        .table thead {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .table a {
+            text-decoration: none;
+            color: #0277bd;
+        }
+
+        .btn-primary {
+            background-color: #0288d1;
+            border-color: #0288d1;
+        }
+
+        .btn-primary:hover {
+            background-color: #0277bd;
+            border-color: #0277bd;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <h1>Questions</h1>
-    <hr>
-    
-    {% for question in questions %}
-        <p>
-            {{question.id}}
-            {{question.title}}
-            <a href="{% url 'eithor:detail' question.id %}">detail</a>
-        </p>
-    {% endfor %}
+    <div class="container mt-5">
+        <h1>Questions</h1>
+        <hr>
+        
+        <table class="table table-bordered table-light">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                    <tr>
+                        <th scope="row">{{ question.id }}</th>
+                        <td>{{ question.title }}</td>
+                        <td><a href="{% url 'eithor:detail' question.id %}" class="btn btn-primary">Detail</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

@@ -1,35 +1,92 @@
 {% extends 'base.html' %}
 
+{% block head %}
+    <style>
+        /* Bootstrap 기본 폰트 사용 */
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        h5 {
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .card-text {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .btn-primary {
+            font-size: 16px;
+            font-weight: 500;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div>
-        <h2>
-            {{question.title}}
-        </h2>
-        <p>A: {{question.option_a}}</p>
+    <div class="row my-5">
+        <div class="col-sm-6 mb-3 mb-sm-0">
+          <div class="card text-bg-primary">
+            <div class="card-body">
+              <h5 class="card-title">{{ question.title }}</h5>
+              <p class="card-text">
+                    A : {{ question.option_a }} ({{ a_count }}개)
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card text-bg-danger">
+            <div class="card-body">
+              <h5 class="card-title">{{ question.title }}</h5>
+              <p class="card-text">
+                B : {{ question.option_b }} ({{ b_count }}개)
+              </p>
+            </div>
+          </div>
+        </div>
     </div>
 
-    <div>
-        <h2>
-            {{question.title}}
-        </h2>
-        <p>B: {{question.option_b}}</p>
-    </div>
     <hr>
+
     <form action="{% url 'eithor:comment_create' question.id %}" method="POST">
         {% csrf_token %}
-        {{form}}
-        <input type="submit" value="제출">
-    </form>
-    <hr>
-    <h2>Answers</h2>
-    {% for article in articles %}
-        <div>
-            <p>
-                {{article.answer}} - {{article.content}}
-            </p>
+        
+        <div class="form-group">
+            {{ form.as_p }}
         </div>
-    {% endfor %}
+        
+        <button type="submit" class="btn btn-primary">제출</button>
+    </form>
+    
+    <hr>
 
-
-
+    <h2>Answers</h2>
+    <div class="container mt-4">
+        <div class="row">
+            {% for answer in answers %}
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 답변 A 또는 B에 따라 색상 구분 -->
+                            <p class="card-text">
+                                <strong>Answer:</strong>
+                                {% if answer.answer == 'A' %}
+                                    <span class="badge bg-primary">A</span> 
+                                {% elif answer.answer == 'B' %}
+                                    <span class="badge bg-danger">B</span>
+                                {% endif %}
+                            </p>
+                            
+                            <!-- 답변에 대한 content -->
+                            <p class="card-text">
+                                <strong>Content:</strong> {{ answer.content }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

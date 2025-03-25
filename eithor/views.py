@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import QuestionsForm,AnswersForm
 from .models import Questions, Answers
+import random
 
 # Create your views here.
 def index(request):
@@ -27,11 +28,18 @@ def detail(request, question_id):
     question = Questions.objects.get(id = question_id)
     form = AnswersForm()
     articles = question.answers_set.all()
+    a_count = question.answers_set.filter(answer='A').count()  # 'A'의 개수
+    b_count = question.answers_set.filter(answer='B').count()
+    answers = Answers.objects.all()
+
     context = {
         'question' : question,
         'form' : form,
         'articles' : articles,
-    }
+        'a_count':a_count,
+        'b_count':b_count,
+        'answers':answers
+        }
     return render(request, 'detail.html', context)
 
 def comment_create(request, question_id):
@@ -50,3 +58,10 @@ def comment_create(request, question_id):
         'form':form
     }
     return render(request, 'detail.html', context)
+
+
+def random_detail(request):
+    article = Questions.objects.all()
+    ar_count = article.count()
+    ran_num = random.choice(range(0, ar_count))
+    return redirect('eithor:detail', question_id = ran_num + 1)
